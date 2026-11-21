@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<!-- Página pública (GitHub Pages) a la que Mercado Pago regresa después de que el dueño autoriza a Omigaventa.
+     Solo pasa la respuesta al programa que corre en la misma computadora (127.0.0.1). No guarda nada. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Omigaventa · Mercado Pago</title>
+<body style="font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0">
+<main style="max-width:460px;padding:24px;text-align:center">
+  <h1 style="font-size:1.3rem">Conectando con Omigaventa…</h1>
+  <p id="msj">Un momento.</p>
+</main>
+<script>
+  const q = new URLSearchParams(location.search);
+  const estado = q.get('state') || '';
+  const puerto = Number(estado.split('.')[0]);
+  if (!Number.isInteger(puerto) || puerto < 1024 || puerto > 65535) {
+    document.getElementById('msj').textContent = 'Esta página solo sirve al conectar Mercado Pago desde Omigaventa (Configuración → Terminal bancaria).';
+  } else {
+    const ida = new URLSearchParams();
+    for (const k of ['code', 'state', 'error', 'error_description']) if (q.has(k)) ida.set(k, q.get(k));
+    location.replace(`http://127.0.0.1:${puerto}/mp/conectado?${ida}`);
+  }
+</script>
+</body>
+</html>
